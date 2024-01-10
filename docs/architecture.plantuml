@@ -1,0 +1,74 @@
+@startuml
+
+package Cell {
+    abstract class Cell {
+        # x: int
+        # y: int
+        # neighbors: Cell[]
+        # walls: boolean[]
+        + getNeighbors(): Cell[]
+        + removeWall(Cell): void
+    }
+
+    class SquareCell {
+        + getNeighbors(): Cell[]
+        + removeWall(Cell): void
+    }
+
+    class HexCell {
+        + getNeighbors(): Cell[]
+        + removeWall(Cell): void
+    }
+
+    Cell <|-- SquareCell
+    Cell <|-- HexCell
+}
+
+package MazeGeneration {
+
+    interface MazeGenerationAlgorithm {
+        + generate(Maze): void
+    }
+
+    class RecursiveBacktracker implements MazeGenerationAlgorithm {
+        + generate(Maze): void
+    }
+
+    class Kruskal implements MazeGenerationAlgorithm {
+        + generate(Maze): void
+    }
+
+    class Prim implements MazeGenerationAlgorithm {
+        + generate(Maze): void
+    }
+}
+
+package Maze {
+    class MazeFactory {
+        + createSquareMaze(width: int, height: int): Maze
+        + createHexMaze(width: int, height: int): Maze
+    }
+
+    abstract class Maze {
+        # width: int
+        # height: int
+        # cells: Cell[]
+        # type : MazeType
+    }
+
+    class SquareMaze {
+    }
+
+    class HexMaze {
+    }
+
+    Maze <|-- SquareMaze
+    Maze <|-- HexMaze
+
+    Maze --> Cell
+
+    MazeFactory --> Maze
+    MazeFactory --> MazeGenerationAlgorithm
+}
+
+@enduml
