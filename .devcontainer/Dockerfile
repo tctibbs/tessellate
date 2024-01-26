@@ -1,27 +1,38 @@
-FROM mcr.microsoft.com/devcontainers/cpp:1-ubuntu-22.04
+# Use Ubuntu as the base image
+FROM ubuntu:22.04
 
-ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE="3.22.2"
+# Set environment variables to prevent interactive prompts during installation
+ENV DEBIAN_FRONTEND=noninteractive
 
-# install the tooks i wish to use
-RUN apt-get update && \
-    apt-get install -y sudo \
-    zsh \
-    fonts-powerline
+# Update package lists and install essential tools and Zsh
+RUN apt-get update -y && \
+    apt-get install -y zsh curl wget git fonts-powerline && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Optionally install the cmake for vcpkg
-COPY ./reinstall-cmake.sh /tmp/
+# Install Clang and Clang-Tidy
+RUN apt-get update -y && \
+    apt-get install -y cmake clang clang-tidy && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
-        chmod +x /tmp/reinstall-cmake.sh && /tmp/reinstall-cmake.sh ${REINSTALL_CMAKE_VERSION_FROM_SOURCE}; \
-    fi \
-    && rm -f /tmp/reinstall-cmake.sh
+# Install Oh My Zsh
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# [Optional] Uncomment this section to install additional vcpkg ports.
-# RUN su vscode -c "${VCPKG_ROOT}/vcpkg install <your-port-name-here>"
+# Install Powerlevel10k theme for Zsh
+RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/.oh-my-zsh/themes/powerlevel10k && \
+    echo "ZSH_THEME=\"powerlevel10k/powerlevel10k\"" >> /root/.zshrc
 
-# [Optional] Uncomment this section to install additional packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+# Set up Oh My Zsh plugins
+RUN sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/g' /root/.zshrc
 
-# zsh configuration
-# COPY ./zshrc /home/.zshrc
+# Install Oh My Zsh plugins
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions.git /root/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /root/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+# Set Zsh as the default shell
+RUN chsh -s /bin/zsh
+
+# Start Zsh
+CMD ["zsh"]
+
