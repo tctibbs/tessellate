@@ -6,14 +6,19 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Update package lists and install essential tools and Zsh
 RUN apt-get update -y && \
-    apt-get install -y zsh curl wget git fonts-powerline && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+    zsh \
+    curl \
+    wget \
+    git \
+    fonts-powerline
 
 # Install Clang and Clang-Tidy
 RUN apt-get update -y && \
-    apt-get install -y cmake clang clang-tidy && \
-    apt-get clean && \
+    apt-get install -y cmake clang clang-tidy
+
+# Clean up
+RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Oh My Zsh
