@@ -7,7 +7,7 @@ Cell::Cell(int width, int height) {
 }
 
 // Destructor
-Cell::~Cell() {}
+Cell::~Cell() = default;
 
 // Set the width of the cell
 void Cell::setWidth(int width) {
@@ -20,6 +20,6 @@ void Cell::setHeight(int height) {
 }
 
 // Calculate and return the area of the cell
-int Cell::getArea() {
+auto Cell::getArea() -> int {
     return width * height;
 }

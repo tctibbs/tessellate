@@ -1,7 +1,9 @@
+#pragma once
+
 class Cell {
 public:
     // Constructor
-    Cell(int width = 0, int height = 0);
+    explicit Cell(int width = 0, int height = 0);
 
     // Destructor
     ~Cell();
@@ -9,7 +11,7 @@ public:
     // Member functions
     void setWidth(int width);
     void setHeight(int height);
-    int getArea();
+    auto getArea() -> int;
 
 private:
     int width;
