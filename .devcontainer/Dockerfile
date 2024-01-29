@@ -11,11 +11,12 @@ RUN apt-get update -y && \
     curl \
     wget \
     git \
-    fonts-powerline
-
-# Install Clang and Clang-Tidy
-RUN apt-get update -y && \
-    apt-get install -y cmake clang clang-tidy
+    fonts-powerline \
+    cmake \
+    clang \
+    clang-tidy \
+    cppcheck \
+    clang-format
 
 # Clean up
 RUN apt-get clean && \
