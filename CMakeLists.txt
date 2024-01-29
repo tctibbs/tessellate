@@ -11,5 +11,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Required for clangd to work
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Run clang-tidy on the project
+set(CMAKE_CXX_CLANG_TIDY
+    "clang-tidy;-header-filter=.;-checks=-*,clang-analyzer-alpha.*,cppcoreguidelines.*,google-*,performance-*,readability-*,modernize-*"
+)
+
 add_subdirectory(src)
 add_subdirectory(apps)
